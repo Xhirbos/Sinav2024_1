@@ -1,11 +1,13 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class KarakterKontrol : MonoBehaviour
 {
-    // Ad Soyad: 
-    // Öğrenci Numarası: 
+    // Ad Soyad: Ahmet Yılmaz   
+    // Öğrenci Numarası: 232011035
 
 
     // Soru 1: Karakteri yön tuşları ile hareket ettiren kodu, HareketEt fonksiyonu içerisine yazınız.
@@ -29,23 +31,66 @@ public class KarakterKontrol : MonoBehaviour
         karakterRb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    void HareketEt()
     {
-        // Yazdığınız metodları çağırınız.
-    }
+        if (Input.GetKey(KeyCode.A))
+        {
+            karakterRb.AddForce(Vector2.left * (hiz * Time.deltaTime));
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            karakterRb.AddForce(Vector2.right * (hiz * Time.deltaTime));
+        }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        // Soru 3 ve soru 4 burada çözülecek.
     }
-
     void Zipla()
     {
         // Space tuşuna basınca karakter zıplamalı ancak aşağıdaki kod hatalı.
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Vector3 ziplamaYonu = new Vector3(UnityEngine.Random.Range(-1f, 1f), 1, UnityEngine.Random.Range(-1f, 1f));
-            karakterRb.AddForce(ziplamaYonu * (ziplamaGucu / 2), ForceMode2D.Impulse);
+
+
+            Vector3 ziplamaYonu = new Vector3(0, 1, 0);
+            karakterRb.AddForce(ziplamaYonu * ziplamaGucu, ForceMode2D.Impulse);
+
+
         }
+    }
+
+    void Update()
+    {
+        HareketEt();
+        Zipla();
+
+        // Yazdığınız metodları çağırınız.
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+
+
+        // burası anahtarı aldığımızda anahtarı aldığımızı belirler
+        if (collision.gameObject.CompareTag("Engel"))
+        {
+
+
+            Destroy(collision.gameObject);
+            metin.text = "OYUN BİTTİ!";
+        }
+        if (collision.gameObject.CompareTag("Puan"))// burası score ve anahtar kodu
+        {
+            //burası scoremizi arttırmak için kulllanılır
+            skor += 1;
+            Destroy(collision.gameObject);
+            metin.text = "score: " + skor;
+
+
+
+        }
+
+
+
+       
     }
 }
